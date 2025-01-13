@@ -2,10 +2,8 @@ package main
 
 import (
     "net/http"
-    "net/http/httptest"
     "strconv"
     "strings"
-    "testing"
 )
 
 var cafeList = map[string][]string{
@@ -13,6 +11,7 @@ var cafeList = map[string][]string{
 }
 
 func mainHandle(w http.ResponseWriter, req *http.Request) {
+    // получаем параметр count из запроса
     countStr := req.URL.Query().Get("count")
     if countStr == "" {
         w.WriteHeader(http.StatusBadRequest)
@@ -20,6 +19,7 @@ func mainHandle(w http.ResponseWriter, req *http.Request) {
         return
     }
 
+    // переводим count в int
     count, err := strconv.Atoi(countStr)
     if err != nil {
         w.WriteHeader(http.StatusBadRequest)
@@ -27,8 +27,10 @@ func mainHandle(w http.ResponseWriter, req *http.Request) {
         return
     }
 
+    // получаем city из параметров запроса
     city := req.URL.Query().Get("city")
 
+    // проверяем наличие города в мапе cafeList
     cafe, ok := cafeList[city]
     if !ok {
         w.WriteHeader(http.StatusBadRequest)
@@ -36,23 +38,16 @@ func mainHandle(w http.ResponseWriter, req *http.Request) {
         return
     }
 
+    // если число в запросе превысило длину слайса, то вернуть приравнять их
     if count > len(cafe) {
         count = len(cafe)
     }
 
+    // ответ будет строкой со значениями из слайса через запятую
     answer := strings.Join(cafe[:count], ",")
 
     w.WriteHeader(http.StatusOK)
     w.Write([]byte(answer))
 }
 
-func TestMainHandlerWhenCountMoreThanTotal(t *testing.T) {
-    totalCount := 4
-    req := ... // здесь нужно создать запрос к сервису
 
-    responseRecorder := httptest.NewRecorder()
-    handler := http.HandlerFunc(mainHandle)
-    handler.ServeHTTP(responseRecorder, req)
-
-    // здесь нужно добавить необходимые проверки
-}

@@ -57,12 +57,3 @@ func TestMainHandlerCountMore(t *testing.T) {
 	actualResponce := strings.Split(responseRecorder.Body.String(), ",")
 	assert.Equal(t, totalCount, len(actualResponce))
 }
-
-/*Если в параметре count указано больше, чем есть всего, должны вернуться все доступные кафе.
-	list := strings.Split(body, ",")
-
-	if !assert.Equal(t, totalCount, len(list)) {
-		t.Errorf("expected cafe count: %d, got %d", totalCount, len(list))
-	}
-
-}*/

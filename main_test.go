@@ -35,7 +35,7 @@ func TestMainHandlerCityNotSupported(t *testing.T) {
 func TestMainHandlerCountMoreThanTotal(t *testing.T) {
 
 	totalCount := 4
-	req := httptest.NewRequest("GET", "/cafe?count=6&city=moscow", nil)
+	req := httptest.NewRequest("GET", "/cafe?count=7&city=moscow", nil)
 
 	responseRecorder := httptest.NewRecorder()
 	handler := http.HandlerFunc(mainHandle)

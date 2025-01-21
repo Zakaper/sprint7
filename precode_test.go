@@ -3,6 +3,7 @@ package main
 import (
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+	_ "golang.org/x/tools/imports"
 	"net/http"
 	"net/http/httptest"
 	"strings"
@@ -16,8 +17,8 @@ func TestMainHandlerWhenOk(t *testing.T) {
 	handler := http.HandlerFunc(mainHandle)
 	handler.ServeHTTP(responseRecorder, req)
 
-	require.Equal(t, http.StatusOK, responseRecorder.Code)
-	require.NotEmpty(t, responseRecorder.Body)
+	assert.Equal(t, http.StatusOK, responseRecorder.Code)
+	assert.NotEmpty(t, responseRecorder.Body)
 }
 
 func TestMainHandlerWhenMissingCount(t *testing.T) {
@@ -27,11 +28,11 @@ func TestMainHandlerWhenMissingCount(t *testing.T) {
 	handler := http.HandlerFunc(mainHandle)
 	handler.ServeHTTP(responseRecorder, req)
 
-	assert.NotNil(t, http.StatusBadRequest, responseRecorder.Code)
+	require.Equal(t, http.StatusBadRequest, responseRecorder.Code)
 
 	expected := `wrong city value`
 
-	require.NotEmpty(t, expected, responseRecorder.Body.String())
+	assert.Equal(t, expected, responseRecorder.Body.String())
 
 }
 

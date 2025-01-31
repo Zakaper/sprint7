@@ -60,7 +60,18 @@ func TestMainHandler(t *testing.T) {
 		assert.Equal(t, http.StatusOK, responseRecorder.Code)
 		assert.NotEmpty(t, responseRecorder.Body.String())
 	})
+	t.Run("Count greater than total returns all cafes", func(t *testing.T) {
+		req := httptest.NewRequest(http.MethodGet, "/cafe?city=moscow&count=10", nil)
+		responseRecorder := httptest.NewRecorder()
+		handler := http.HandlerFunc(mainHandle)
 
+		handler.ServeHTTP(responseRecorder, req)
+
+		requiredCafes := cafeList["moscow"]
+		assert.Equal(t, http.StatusOK, responseRecorder.Code)
+		require.Len(t, strings.Split(responseRecorder.Body.String(), ","), len(requiredCafes))
+
+	})
 	t.Run("Unsupported city returns 400 and error message", func(t *testing.T) {
 		req := httptest.NewRequest(http.MethodGet, "/cafe?city=unknown&count=2", nil)
 		responseRecorder := httptest.NewRecorder()
@@ -72,15 +83,4 @@ func TestMainHandler(t *testing.T) {
 		assert.Equal(t, "wrong city value", responseRecorder.Body.String())
 	})
 
-	t.Run("Count greater than total returns all cafes", func(t *testing.T) {
-		req := httptest.NewRequest(http.MethodGet, "/cafe?city=moscow&count=10", nil)
-		responseRecorder := httptest.NewRecorder()
-		handler := http.HandlerFunc(mainHandle)
-
-		handler.ServeHTTP(responseRecorder, req)
-
-		requiredCafes := cafeList["moscow"]
-		assert.Equal(t, http.StatusOK, responseRecorder.Code)
-		require.Len(t, strings.Split(responseRecorder.Body.String(), ","), len(requiredCafes))
-	})
 }

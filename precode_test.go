@@ -49,7 +49,7 @@ func TestMainHandlerWhenCountMoreThanTotal(t *testing.T) {
 	handler := http.HandlerFunc(mainHandle)
 	handler.ServeHTTP(responseRecorder, req)
 
-	// здесь нужно добавить необходимые проверки
+	//   здесь нужно добавить необходимые проверки
 
 	assert.Equal(t, http.StatusOK, responseRecorder.Code)
 

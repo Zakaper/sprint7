@@ -1,14 +1,10 @@
 package main
 
 import (
+	"fmt"
 	"net/http"
-	"net/http/httptest"
 	"strconv"
 	"strings"
-	"testing"
-
-	"github.com/stretchr/testify/assert"
-	"github.com/stretchr/testify/require"
 )
 
 // cafeList - мапа, где указатель - город, содержимое - перечень кафе в этом городе
@@ -63,39 +59,10 @@ func mainHandle(w http.ResponseWriter, req *http.Request) {
 	w.Write([]byte(answer))
 }
 
-func TestMainHandlerWhenOkAndBodyNotEmpty(t *testing.T) {
-	req := httptest.NewRequest("GET", "/cafe?count=2&city=moscow", nil)
-
-	responseRecorder := httptest.NewRecorder()
-	handler := http.HandlerFunc(mainHandle)
-	handler.ServeHTTP(responseRecorder, req)
-
-	assert.Equal(t, responseRecorder.Code, http.StatusOK)
-	require.NotEmpty(t, responseRecorder.Body)
-}
-
-func TestMainHandlerWhenCityIsWrong(t *testing.T) {
-	expected := "wrong city value"
-	req := httptest.NewRequest("GET", "/cafe?count=2&city=syctyvcar", nil)
-
-	responseRecorder := httptest.NewRecorder()
-	handler := http.HandlerFunc(mainHandle)
-	handler.ServeHTTP(responseRecorder, req)
-
-	assert.Equal(t, responseRecorder.Code, http.StatusBadRequest)
-	require.Equal(t, responseRecorder.Body.String(), expected)
-}
-
-func TestMainHandlerWhenCountMoreThanTotal(t *testing.T) {
-	totalCount := 4
-	req := httptest.NewRequest("GET", "/cafe?count=8&city=moscow", nil)
-
-	responseRecorder := httptest.NewRecorder()
-	handler := http.HandlerFunc(mainHandle)
-	handler.ServeHTTP(responseRecorder, req)
-
-	body := responseRecorder.Body.String()
-	list := strings.Split(body, ",")
-
-	require.Len(t, list, totalCount)
+func main() {
+	http.HandleFunc(`/cafe`, mainHandle)
+	err := http.ListenAndServe(":8080", nil)
+	if err != nil {
+		fmt.Printf("failed to listen and serve: %s\n", err)
+	}
 }

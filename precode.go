@@ -56,9 +56,9 @@ func TestMainHandlerWhenOk(t *testing.T) {
 	handler := http.HandlerFunc(mainHandle)
 	handler.ServeHTTP(responseRecorder, req)
 
-	require.Equal(t, responseRecorder.Code, http.StatusOK) // проверил что вернул 200
-	body := responseRecorder.Body.String()                 // перевел тело ответа в строку
-	assert.NotEmpty(t, body)                               // проверяю что тело в ответе не пустое
+	require.Equal(t, http.StatusOK, responseRecorder.Code)
+	body := responseRecorder.Body.String()
+	assert.NotEmpty(t, body)
 
 }
 
@@ -69,10 +69,10 @@ func TestMainHandlerWhenNoCity(t *testing.T) {
 	handler := http.HandlerFunc(mainHandle)
 	handler.ServeHTTP(responseRecorder, req)
 
-	mistake := 400 // указываю номер ошибки
+	mistake := 400
 	bodyEcpected := "wrong city value"
-	require.Equal(t, http.StatusBadRequest, mistake)              // сравниваю код ошибки
-	assert.Equal(t, responseRecorder.Body.String(), bodyEcpected) // сравниваю город и вывожу тело ответа если город некорректный
+	require.Equal(t, http.StatusBadRequest, mistake)
+	assert.Equal(t, bodyEcpected, responseRecorder.Body.String())
 
 }
 
@@ -84,8 +84,8 @@ func TestMainHandlerWhenCountMoreThanTotal(t *testing.T) {
 	handler := http.HandlerFunc(mainHandle)
 	handler.ServeHTTP(responseRecorder, req)
 
-	body := responseRecorder.Body.String()      // Получаю тело ответа (кол-во городов)
-	splitBody := strings.Split(body, ",")       // Привожу тело ответа в слайс по запятой
-	assert.Equal(t, len(splitBody), totalCount) // Проверяю равенство индексов в получившимся слайсе и вывожу весь список
+	body := responseRecorder.Body.String()
+	splitBody := strings.Split(body, ",")
+	assert.Equal(t, totalCount, len(splitBody))
 
 }

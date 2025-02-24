@@ -1,0 +1,8 @@
+=== RUN   TestMainHandlerCorrectRequest
+--- PASS: TestMainHandlerCorrectRequest (0.00s)
+=== RUN   TestMainHandlerWrongCityValue
+--- PASS: TestMainHandlerWrongCityValue (0.00s)
+=== RUN   TestMainHandlerCountMoreThanTotal
+--- PASS: TestMainHandlerCountMoreThanTotal (0.00s)
+PASS
+ok  	myproject	(cached)

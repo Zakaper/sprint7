@@ -45,3 +45,5 @@ func TestMainHandlerWhenRequestCorrect(t *testing.T) {
 	assert.NotEmpty(t, responseRecorder.Body.String())
 	assert.Len(t, strings.Split(responseRecorder.Body.String(), ","), 2)
 }
+
+//test
